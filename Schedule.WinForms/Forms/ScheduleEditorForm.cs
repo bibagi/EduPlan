@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Schedule.Core.Data;
 using Schedule.Core.Models;
+using Schedule.WinForms.Helpers;
 
 namespace Schedule.WinForms.Forms;
 
@@ -73,9 +74,10 @@ public partial class ScheduleEditorForm : Form
             AllowUserToAddRows = false,
             AllowUserToDeleteRows = false,
             ReadOnly = true,
-            SelectionMode = DataGridViewSelectionMode.CellSelect,
-            Font = new Font("Segoe UI", 9)
+            SelectionMode = DataGridViewSelectionMode.CellSelect
         };
+        
+        ModernStyles.ApplyModernStyle(dgv);
 
         dgv.Columns.Add("Lesson", "Урок");
         dgv.Columns.Add("Mon", "Понедельник");

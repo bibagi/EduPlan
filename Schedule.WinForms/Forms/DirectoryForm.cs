@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Schedule.Core.Data;
 using Schedule.Core.Models;
+using Schedule.WinForms.Helpers;
 
 namespace Schedule.WinForms.Forms;
 
@@ -25,72 +26,45 @@ public partial class DirectoryForm : Form
         this.Text = $"Справочник: {GetEntityTitle()}";
         this.Size = new Size(900, 600);
         this.StartPosition = FormStartPosition.CenterScreen;
+        this.BackColor = ModernStyles.BackgroundColor;
 
         dataGridView = new DataGridView
         {
-            Location = new Point(20, 20),
-            Size = new Size(840, 480),
-            AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-            SelectionMode = DataGridViewSelectionMode.FullRowSelect,
-            MultiSelect = false,
-            ReadOnly = true,
-            AllowUserToAddRows = false,
-            Font = new Font("Segoe UI", 10)
+            Dock = DockStyle.Fill,
+            Margin = new Padding(0, 0, 0, 60)
+        };
+        ModernStyles.ApplyModernStyle(dataGridView);
+
+        var pnlButtons = new Panel
+        {
+            Dock = DockStyle.Bottom,
+            Height = 60,
+            BackColor = ModernStyles.BackgroundColor,
+            Padding = new Padding(20, 12, 20, 12)
         };
 
-        btnAdd = new Button 
-        { 
-            Text = "Добавить", 
-            Location = new Point(20, 520), 
-            Size = new Size(120, 35),
-            Font = new Font("Segoe UI", 10),
-            BackColor = Color.FromArgb(0, 120, 215),
-            ForeColor = Color.White,
-            FlatStyle = FlatStyle.Flat
-        };
-        btnAdd.FlatAppearance.BorderSize = 0;
+        btnAdd = ModernStyles.CreateModernButton("Добавить");
+        btnAdd.Location = new Point(20, 12);
+        btnAdd.Width = 120;
         btnAdd.Click += BtnAdd_Click;
 
-        btnEdit = new Button 
-        { 
-            Text = "Изменить", 
-            Location = new Point(150, 520), 
-            Size = new Size(120, 35),
-            Font = new Font("Segoe UI", 10),
-            BackColor = Color.FromArgb(0, 120, 215),
-            ForeColor = Color.White,
-            FlatStyle = FlatStyle.Flat
-        };
-        btnEdit.FlatAppearance.BorderSize = 0;
+        btnEdit = ModernStyles.CreateModernButton("Изменить");
+        btnEdit.Location = new Point(150, 12);
+        btnEdit.Width = 120;
         btnEdit.Click += BtnEdit_Click;
 
-        btnDelete = new Button 
-        { 
-            Text = "Удалить", 
-            Location = new Point(280, 520), 
-            Size = new Size(120, 35),
-            Font = new Font("Segoe UI", 10),
-            BackColor = Color.FromArgb(192, 0, 0),
-            ForeColor = Color.White,
-            FlatStyle = FlatStyle.Flat
-        };
-        btnDelete.FlatAppearance.BorderSize = 0;
+        btnDelete = ModernStyles.CreateModernButton("Удалить", ModernStyles.DangerColor);
+        btnDelete.Location = new Point(280, 12);
+        btnDelete.Width = 120;
         btnDelete.Click += BtnDelete_Click;
 
-        var btnImport = new Button 
-        { 
-            Text = "Импорт", 
-            Location = new Point(420, 520), 
-            Size = new Size(120, 35),
-            Font = new Font("Segoe UI", 10),
-            BackColor = Color.FromArgb(0, 150, 136),
-            ForeColor = Color.White,
-            FlatStyle = FlatStyle.Flat
-        };
-        btnImport.FlatAppearance.BorderSize = 0;
+        var btnImport = ModernStyles.CreateModernButton("Импорт", ModernStyles.SuccessColor);
+        btnImport.Location = new Point(410, 12);
+        btnImport.Width = 120;
         btnImport.Click += async (s, e) => await BtnImport_ClickAsync();
 
-        this.Controls.AddRange(new Control[] { dataGridView, btnAdd, btnEdit, btnDelete, btnImport });
+        pnlButtons.Controls.AddRange(new Control[] { btnAdd, btnEdit, btnDelete, btnImport });
+        this.Controls.AddRange(new Control[] { dataGridView, pnlButtons });
     }
 
     private string GetEntityTitle()
@@ -119,19 +93,66 @@ public partial class DirectoryForm : Form
         {
             case "Teachers":
                 dataGridView.DataSource = context.Teachers.ToList();
+                RenameTeacherColumns();
                 break;
             case "Classrooms":
                 dataGridView.DataSource = context.Classrooms.ToList();
+                RenameClassroomColumns();
                 break;
             case "Subjects":
                 dataGridView.DataSource = context.Subjects.ToList();
+                RenameSubjectColumns();
                 break;
             case "Groups":
                 dataGridView.DataSource = context.Groups.ToList();
+                RenameGroupColumns();
                 break;
         }
+    }
 
-        if (dataGridView.Columns.Contains("Lessons"))
+    private void RenameTeacherColumns()
+    {
+        if (dataGridView.Columns["Id"] != null)
+            dataGridView.Columns["Id"]!.HeaderText = "ID";
+        if (dataGridView.Columns["FullName"] != null)
+            dataGridView.Columns["FullName"]!.HeaderText = "Полное имя";
+        if (dataGridView.Columns["ShortName"] != null)
+            dataGridView.Columns["ShortName"]!.HeaderText = "Краткое имя";
+        if (dataGridView.Columns["Lessons"] != null)
+            dataGridView.Columns["Lessons"]!.Visible = false;
+    }
+
+    private void RenameClassroomColumns()
+    {
+        if (dataGridView.Columns["Id"] != null)
+            dataGridView.Columns["Id"]!.HeaderText = "ID";
+        if (dataGridView.Columns["Name"] != null)
+            dataGridView.Columns["Name"]!.HeaderText = "Номер аудитории";
+        if (dataGridView.Columns["Capacity"] != null)
+            dataGridView.Columns["Capacity"]!.HeaderText = "Вместимость";
+        if (dataGridView.Columns["Lessons"] != null)
+            dataGridView.Columns["Lessons"]!.Visible = false;
+    }
+
+    private void RenameSubjectColumns()
+    {
+        if (dataGridView.Columns["Id"] != null)
+            dataGridView.Columns["Id"]!.HeaderText = "ID";
+        if (dataGridView.Columns["Name"] != null)
+            dataGridView.Columns["Name"]!.HeaderText = "Название предмета";
+        if (dataGridView.Columns["Lessons"] != null)
+            dataGridView.Columns["Lessons"]!.Visible = false;
+    }
+
+    private void RenameGroupColumns()
+    {
+        if (dataGridView.Columns["Id"] != null)
+            dataGridView.Columns["Id"]!.HeaderText = "ID";
+        if (dataGridView.Columns["Name"] != null)
+            dataGridView.Columns["Name"]!.HeaderText = "Название группы";
+        if (dataGridView.Columns["Year"] != null)
+            dataGridView.Columns["Year"]!.HeaderText = "Курс";
+        if (dataGridView.Columns["Lessons"] != null)
             dataGridView.Columns["Lessons"]!.Visible = false;
     }
 

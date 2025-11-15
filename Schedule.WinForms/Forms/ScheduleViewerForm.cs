@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Schedule.Core.Data;
 using Schedule.Core.Models;
 using Schedule.Core.Services;
+using Schedule.WinForms.Helpers;
 
 namespace Schedule.WinForms.Forms;
 
@@ -101,9 +102,10 @@ public partial class ScheduleViewerForm : Form
             Size = new Size(1320, 620),
             AllowUserToAddRows = false,
             ReadOnly = true,
-            SelectionMode = DataGridViewSelectionMode.CellSelect,
-            Font = new Font("Segoe UI", 9)
+            SelectionMode = DataGridViewSelectionMode.CellSelect
         };
+        
+        ModernStyles.ApplyModernStyle(dgv);
 
         dgv.Columns.Add("Lesson", "Урок");
         dgv.Columns.Add("Mon", "Понедельник");

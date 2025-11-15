@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Schedule.Core.Data;
 using Schedule.Core.Models;
 using Schedule.Core.Services;
+using Schedule.WinForms.Helpers;
 
 namespace Schedule.WinForms.Forms;
 
@@ -34,7 +35,6 @@ public partial class WeekScheduleForm : Form
         this.Text = "Расписание на неделю (все группы)";
         this.Size = new Size(1600, 900);
         this.StartPosition = FormStartPosition.CenterScreen;
-        this.WindowState = FormWindowState.Maximized;
 
         // Панель управления
         var pnlControls = new Panel
@@ -117,7 +117,6 @@ public partial class WeekScheduleForm : Form
         dgvSchedule = new DataGridView
         {
             Dock = DockStyle.Fill,
-            Font = new Font("Segoe UI", 8),
             AllowUserToAddRows = false,
             AllowUserToDeleteRows = false,
             ReadOnly = true,
@@ -128,6 +127,8 @@ public partial class WeekScheduleForm : Form
             DefaultCellStyle = new DataGridViewCellStyle { WrapMode = DataGridViewTriState.True },
             AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
         };
+        
+        ModernStyles.ApplyModernStyle(dgvSchedule);
 
         this.Controls.Add(dgvSchedule);
         this.Controls.Add(pnlControls);
@@ -156,6 +157,19 @@ public partial class WeekScheduleForm : Form
         // Загружаем все группы
         var groups = context.Groups.OrderBy(g => g.Name).ToList();
 
+        // Очищаем таблицу
+        dgvSchedule.Columns.Clear();
+        dgvSchedule.Rows.Clear();
+
+        if (groups.Count == 0)
+        {
+            // Если нет групп, показываем сообщение
+            dgvSchedule.Columns.Add("Message", "Сообщение");
+            dgvSchedule.Rows.Add("Нет групп в базе данных. Создайте группы в разделе 'Справочники'.");
+            dgvSchedule.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            return;
+        }
+
         // Загружаем все уроки на неделю
         var lessons = context.Lessons
             .Include(l => l.Group)
@@ -166,10 +180,6 @@ public partial class WeekScheduleForm : Form
             .OrderBy(l => l.Date)
             .ThenBy(l => l.LessonNumber)
             .ToList();
-
-        // Очищаем таблицу
-        dgvSchedule.Columns.Clear();
-        dgvSchedule.Rows.Clear();
 
         // Создаём колонки: Дата/День + Группы
         dgvSchedule.Columns.Add("Day", "День");
