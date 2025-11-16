@@ -103,7 +103,7 @@ public partial class UserEditForm : Form
             DropDownStyle = ComboBoxStyle.DropDownList,
             Font = new Font("Segoe UI", 10)
         };
-        cmbRole.Items.AddRange(new object[] { "Admin", "Teacher", "Viewer" });
+        cmbRole.Items.AddRange(new object[] { "Admin", "Methodist", "Teacher" });
         cmbRole.SelectedIndex = 0;
 
         var lblNote = new Label

@@ -228,9 +228,9 @@ public partial class WeekScheduleForm : Form
 
     private async Task BtnImport_ClickAsync()
     {
-        if (_currentUser.Role != "Admin")
+        if (_currentUser.Role != "Admin" && _currentUser.Role != "Methodist")
         {
-            MessageBox.Show("Только администратор может импортировать расписание", "Доступ запрещён", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show("Только администратор и методист могут импортировать расписание", "Доступ запрещён", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return;
         }
 

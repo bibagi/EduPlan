@@ -22,7 +22,9 @@ public partial class MainForm : Form
         _currentUser = user;
         await _viewModel.InitializeAsync(user);
         lblWelcome.Text = user.Login;
-        _lblRole.Text = user.Role == "Admin" ? "Администратор" : user.Role == "Teacher" ? "Преподаватель" : "Просмотр";
+        _lblRole.Text = user.Role == "Admin" ? "Администратор" : 
+                        user.Role == "Methodist" ? "Методист" : 
+                        user.Role == "Teacher" ? "Преподаватель" : "Пользователь";
         
         // Создаём меню после получения пользователя
         CreateTabs();
@@ -227,16 +229,19 @@ public partial class MainForm : Form
         _pnlMenuButtons.Controls.Add(btnWeek);
         yPos += 48;
 
-        // Кнопка: Редактор расписания
-        var btnEditor = CreateMenuButton("Редактор расписания", "✏️", yPos);
-        btnEditor.Click += (s, e) =>
+        // Кнопка: Редактор расписания (Admin и Methodist)
+        if (_currentUser.Role == "Admin" || _currentUser.Role == "Methodist")
         {
-            SelectMenuButton(btnEditor);
-            _lblPageTitle.Text = "Редактор расписания";
-            ShowContent(new ScheduleEditorControl(_currentUser));
-        };
-        _pnlMenuButtons.Controls.Add(btnEditor);
-        yPos += 48;
+            var btnEditor = CreateMenuButton("Редактор расписания", "✏️", yPos);
+            btnEditor.Click += (s, e) =>
+            {
+                SelectMenuButton(btnEditor);
+                _lblPageTitle.Text = "Редактор расписания";
+                ShowContent(new ScheduleEditorControl(_currentUser));
+            };
+            _pnlMenuButtons.Controls.Add(btnEditor);
+            yPos += 48;
+        }
 
         // Кнопка: Просмотр расписания
         var btnViewer = CreateMenuButton("Просмотр расписания", "👁️", yPos);
@@ -249,8 +254,8 @@ public partial class MainForm : Form
         _pnlMenuButtons.Controls.Add(btnViewer);
         yPos += 48;
 
-        // Разделитель
-        if (_currentUser.Role == "Admin")
+        // Разделитель и Справочники (Admin и Methodist)
+        if (_currentUser.Role == "Admin" || _currentUser.Role == "Methodist")
         {
             var separator = new Label
             {
@@ -271,8 +276,11 @@ public partial class MainForm : Form
             };
             _pnlMenuButtons.Controls.Add(btnDirectory);
             yPos += 48;
+        }
 
-            // Кнопка: Пользователи
+        // Кнопка: Пользователи (только Admin)
+        if (_currentUser.Role == "Admin")
+        {
             var btnUsers = CreateMenuButton("Пользователи", "👥", yPos);
             btnUsers.Click += (s, e) =>
             {

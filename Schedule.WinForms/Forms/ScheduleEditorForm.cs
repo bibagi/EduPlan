@@ -191,9 +191,9 @@ public partial class ScheduleEditorForm : Form
         if (e.RowIndex < 0 || e.ColumnIndex < 1 || !_selectedGroupId.HasValue)
             return;
 
-        if (_currentUser.Role != "Admin")
+        if (_currentUser.Role != "Admin" && _currentUser.Role != "Methodist")
         {
-            MessageBox.Show("Только администратор может редактировать расписание", "Доступ запрещён", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show("Только администратор и методист могут редактировать расписание", "Доступ запрещён", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return;
         }
 
