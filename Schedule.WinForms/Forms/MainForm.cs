@@ -30,13 +30,27 @@ public partial class MainForm : Form
 
     private void InitializeComponent()
     {
-        this.Text = "Система управления расписанием";
+        this.Text = "EduPlan - Система управления расписанием";
         this.Size = new Size(1200, 800);
         this.StartPosition = FormStartPosition.CenterScreen;
         this.BackColor = Color.FromArgb(243, 243, 243);
         this.FormBorderStyle = FormBorderStyle.Sizable;
         this.MinimumSize = new Size(1000, 600);
         this.WindowState = FormWindowState.Maximized;
+        
+        // Загружаем иконку
+        try
+        {
+            string iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icon.ico");
+            if (File.Exists(iconPath))
+            {
+                this.Icon = new Icon(iconPath);
+            }
+        }
+        catch
+        {
+            // Игнорируем ошибки загрузки иконки
+        }
 
 
 

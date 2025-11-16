@@ -22,65 +22,69 @@ public partial class LoginForm : Form
 
     private void InitializeComponent()
     {
-        this.Text = "Вход в систему";
-        this.Size = new Size(450, 580);
+        this.Text = "EduPlan - Вход в систему";
+        this.Size = new Size(450, 550);
         this.StartPosition = FormStartPosition.CenterScreen;
         this.FormBorderStyle = FormBorderStyle.FixedDialog;
         this.MaximizeBox = false;
         this.BackColor = Color.White;
-
-        // Иконка приложения
-        var pnlIcon = new Panel
+        
+        // Загружаем иконку
+        try
         {
-            Location = new Point(175, 60),
-            Size = new Size(100, 100),
-            BackColor = Color.FromArgb(0, 120, 212)
-        };
-
-        var lblIcon = new Label
+            string iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "icon.ico");
+            if (File.Exists(iconPath))
+            {
+                this.Icon = new Icon(iconPath);
+            }
+        }
+        catch
         {
-            Text = "📅",
-            Font = new Font("Segoe UI", 48),
-            Location = new Point(15, 10),
-            Size = new Size(70, 80),
-            TextAlign = ContentAlignment.MiddleCenter,
-            BackColor = Color.Transparent
-        };
-        pnlIcon.Controls.Add(lblIcon);
+            // Игнорируем ошибки загрузки иконки
+        }
 
+        // Заголовок приложения
         var lblTitle = new Label
         {
-            Text = "Расписание",
-            Font = new Font("Segoe UI", 24, FontStyle.Bold),
-            Location = new Point(50, 180),
-            Size = new Size(350, 35),
+            Text = "EduPlan",
+            Font = new Font("Segoe UI", 32, FontStyle.Bold),
+            Location = new Point(50, 60),
+            Size = new Size(350, 50),
             TextAlign = ContentAlignment.MiddleCenter,
-            ForeColor = Color.FromArgb(32, 32, 32)
+            ForeColor = Color.FromArgb(0, 120, 212)
         };
 
         var lblSubtitle = new Label
         {
             Text = "Система управления расписанием",
-            Font = new Font("Segoe UI", 10),
-            Location = new Point(50, 220),
-            Size = new Size(350, 20),
+            Font = new Font("Segoe UI", 11),
+            Location = new Point(50, 115),
+            Size = new Size(350, 25),
             TextAlign = ContentAlignment.MiddleCenter,
             ForeColor = Color.FromArgb(96, 96, 96)
+        };
+
+        // Разделительная линия
+        var separator = new Panel
+        {
+            Location = new Point(75, 160),
+            Size = new Size(300, 1),
+            BackColor = Color.FromArgb(229, 229, 229)
         };
 
         var lblLogin = new Label
         {
             Text = "Логин",
-            Location = new Point(75, 270),
-            Size = new Size(300, 20),
+            Location = new Point(75, 190),
+            Size = new Size(300, 22),
             Font = new Font("Segoe UI", 10),
             ForeColor = Color.FromArgb(32, 32, 32)
         };
 
         txtLogin = new TextBox
         {
-            Location = new Point(75, 295),
-            Size = new Size(300, 32),
+            Location = new Point(75, 217),
+            Size = new Size(300, 35),
             Font = new Font("Segoe UI", 11),
             BorderStyle = BorderStyle.FixedSingle,
             PlaceholderText = "Только английские буквы"
@@ -90,16 +94,16 @@ public partial class LoginForm : Form
         var lblPassword = new Label
         {
             Text = "Пароль",
-            Location = new Point(75, 340),
-            Size = new Size(300, 20),
+            Location = new Point(75, 270),
+            Size = new Size(300, 22),
             Font = new Font("Segoe UI", 10),
             ForeColor = Color.FromArgb(32, 32, 32)
         };
 
         txtPassword = new TextBox
         {
-            Location = new Point(75, 365),
-            Size = new Size(300, 32),
+            Location = new Point(75, 297),
+            Size = new Size(300, 35),
             PasswordChar = '●',
             Font = new Font("Segoe UI", 11),
             BorderStyle = BorderStyle.FixedSingle,
@@ -110,8 +114,8 @@ public partial class LoginForm : Form
         chkRememberMe = new CheckBox
         {
             Text = "Запомнить меня",
-            Location = new Point(75, 405),
-            Size = new Size(300, 20),
+            Location = new Point(75, 345),
+            Size = new Size(300, 22),
             Font = new Font("Segoe UI", 9),
             ForeColor = Color.FromArgb(32, 32, 32),
             Checked = false
@@ -119,8 +123,8 @@ public partial class LoginForm : Form
 
         lblError = new Label
         {
-            Location = new Point(75, 430),
-            Size = new Size(300, 20),
+            Location = new Point(75, 375),
+            Size = new Size(300, 22),
             ForeColor = Color.FromArgb(196, 43, 28),
             Font = new Font("Segoe UI", 9),
             TextAlign = ContentAlignment.MiddleLeft
@@ -129,9 +133,9 @@ public partial class LoginForm : Form
         btnLogin = new Button
         {
             Text = "Войти",
-            Location = new Point(75, 460),
-            Size = new Size(300, 40),
-            Font = new Font("Segoe UI", 11),
+            Location = new Point(75, 410),
+            Size = new Size(300, 42),
+            Font = new Font("Segoe UI", 12, FontStyle.Bold),
             BackColor = Color.FromArgb(0, 120, 212),
             ForeColor = Color.White,
             FlatStyle = FlatStyle.Flat,
@@ -143,8 +147,8 @@ public partial class LoginForm : Form
         var lnkForgotPassword = new LinkLabel
         {
             Text = "Забыли пароль?",
-            Location = new Point(75, 510),
-            Size = new Size(300, 20),
+            Location = new Point(75, 465),
+            Size = new Size(300, 22),
             Font = new Font("Segoe UI", 9),
             TextAlign = ContentAlignment.MiddleCenter,
             LinkColor = Color.FromArgb(0, 120, 212),
@@ -153,7 +157,7 @@ public partial class LoginForm : Form
         lnkForgotPassword.LinkBehavior = LinkBehavior.HoverUnderline;
         lnkForgotPassword.Click += (s, e) => OnForgotPasswordClick();
 
-        this.Controls.AddRange(new Control[] { pnlIcon, lblTitle, lblSubtitle, lblLogin, txtLogin, lblPassword, txtPassword, chkRememberMe, lblError, btnLogin, lnkForgotPassword });
+        this.Controls.AddRange(new Control[] { lblTitle, lblSubtitle, separator, lblLogin, txtLogin, lblPassword, txtPassword, chkRememberMe, lblError, btnLogin, lnkForgotPassword });
         this.AcceptButton = btnLogin;
     }
 
